@@ -1,0 +1,112 @@
+/*
+ * This is the card class. It contains all the properties needed to represent a Playing Card
+ * in a deck of cards. Following are the eight cards we can represent, each of which contain
+ * both a value ('A', '2', '3', ... 'T', 'J', 'Q',' K') and a suit (spades, hearts, 
+ * diamonds, clubs).
+ *
+ * The main class for testing this class is at the bottom of this file.
+ */
+
+
+public class Card {
+	private char value;
+
+	public enum Suit {
+		clubs, diamonds, hearts, spades
+	}
+
+	private Suit suit;
+	private boolean errorFlag;
+
+	//A simple (overloaded) constructor
+	public Card(char value, Suit suit) {
+		this.set(value, suit);
+	}
+
+	//A default constructor
+	public Card() {
+		this.set('A', Suit.spades);
+	}
+
+	//Accessor for Value of the card
+	public char getValue() {
+		return this.value;
+	}
+
+	//Accessor for Suit of the card
+	public Suit getSuit() {
+		return this.suit;
+	}
+
+	//Accessor for the errorFlag of the card.
+	//Its true when the declaration is faulty.
+	public boolean getErrorFlag() {
+		return this.errorFlag;
+	}
+
+	//A simple toString method.
+	public String toString() {
+		if (this.errorFlag) {
+			return "[invalid card]";
+		} else {
+			return this.value + " of " + this.suit;
+		}
+	}
+
+	//This method sets the values for the object by first checking
+	//whether the given input is valid or not and then passing on
+	//the values to the object. It returns true if the object has
+	//been properly set, otherwise false in case of errors.
+	public boolean set(char value, Suit suit) {
+		if (isValid(value, suit)) {
+			this.value = value;
+			this.suit = suit;
+		} else {
+			return false;
+		}
+		return true;
+	}
+
+	//This method is used for matching a card with another one.
+	public boolean equals(Card card) {
+		if (this.getValue() == card.getValue() && this.getSuit() == card.getSuit()) {
+			return true;
+		}
+		return false;
+	}
+
+	//This method checks the validity of the input parameters
+	//passed to it. 
+	private boolean isValid(char value, Suit suit) {
+		boolean valueCheck = false;
+		boolean suitCheck = false;
+
+		// This a generic check based on data types. We can make it more precise by allowing
+		// only certain pre-defined values through via checking ASCII codes.
+		if (Character.isLetter(value) || Character.isDigit(value)) {
+			valueCheck = true;
+		} else {
+			valueCheck = false;
+		}
+
+		try {
+			this.suit = suit;
+			suitCheck = true;
+		} catch (IllegalArgumentException ex) {
+			suitCheck = false;
+		}
+
+		if (valueCheck && suitCheck) {
+			errorFlag = false;
+		} else {
+			errorFlag = true;
+		}
+
+		// Not operation is applied on the return of this method
+		// because logically when we say isValid, true would mean
+		// that the value is valid and false would mean the value
+		// isn't valid. This will be the exact reverse of errorFlag
+		// all the time.
+		return !errorFlag;
+	}
+}
